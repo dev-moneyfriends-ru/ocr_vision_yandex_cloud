@@ -1,0 +1,1 @@
+# ocr_vision_yandex_cloud
