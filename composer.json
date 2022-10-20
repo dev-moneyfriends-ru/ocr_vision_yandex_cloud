@@ -1,0 +1,35 @@
+{
+  "name": "mf-team/ocr_vision_yandex_cloud",
+  "description": "API для загрузки документов на обработку и получение результатов распознавания",
+  "type": "library",
+  "version": "dev-master",
+  "keywords": [
+    "vision",
+    "api",
+    "php",
+    "batchAnalyze"
+  ],
+  "authors": [
+    {
+      "name": "Dmitry Kinev",
+      "email": "dk.psy@inbox.ru"
+    }
+  ],
+  "require": {
+    "php": ">=7.2.0",
+    "guzzlehttp/guzzle": "^7.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "mfteam\\ocrVisionYandexCloud\\": "src/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "config": {
+  }
+}
