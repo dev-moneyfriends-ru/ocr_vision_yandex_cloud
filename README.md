@@ -55,11 +55,11 @@ $ocrVisionYandexCloud = VisionYandexGatewayFactory::instanceClient(
 ```injectablephp
 // Формирование ключей и инициализация объекта
 $ocrVisionYandexCloud = new ApiClient(
-    '', // oAuth токен
+        '', // oAuth токен
         '', // folderId
         'passport', // Название модели
         new Client(), // GuzzleHTTP клиент
-);
+    );
 
 // Отправка запроса с путём к файлу для распознаванию, в ответ DTO
 $result = $ocrVisionYandexCloud->processDetection('/home/user/passport.jpg');
