@@ -38,56 +38,39 @@ composer require --prefer-dist mf-team/ocr_vision_yandex_cloud dev-master
 Создать новый экземпляр класса
 
 ```injectablephp
-$ocrVisionYandexCloud = new \mfteam\ocrVisionYandexCloud\ApiClient(
-            'oAuthToken' => 'y0_AgAAAAABcJupAATuwQAAAADRoRDgwdtzEfpoRKOvqvqOXxul2BUz-Ls',
-            'folderId' => 'b1gnl76pluc11pkm9klr',
-            'model' => 'passport',
-            'language' => 'ru'
-        );
+$ocrVisionYandexCloud = VisionYandexGatewayFactory::instanceClient(
+        '', // oAuth токен
+        '', // folderId
+        'passport', // Название модели
+        new Client(), // GuzzleHTTP клиент
+        '/home/user/IAMToken.txt', // Путь к файлу для распознавания
+        'ru' // Язык документа, по умолчанию 'ru'
+    );
 ```
 
 ### Создание запроса
 
-На выходе получаем массив DTO распознанных страниц.
+На выходе получаем класс - набор параметров распознанного документа.
 
 ```injectablephp
 // Формирование ключей и инициализация объекта
 $ocrVisionYandexCloud = new ApiClient(
-    'y0_AgAAAAABcJupAATuwQAAAADRoRDgwdtzEfpoRKOvqvqOXxul2BUz-Ls', // oAuth токен
-    'b1gnl76pluc11pkm9klr', // folderId
-    'passport', // Название модели, по умолчанию 'passport'
-    'ru' // Язык документа, по умолчанию 'ru'
+    '', // oAuth токен
+        '', // folderId
+        'passport', // Название модели
+        new Client(), // GuzzleHTTP клиент
 );
 
-// Отправка запроса с путём к файлу для распознаванию, в ответ массив DTO
-$arrayOfDto = $ocrVisionYandexCloud->processDetection('/tmp/ПАСПОРТ/passport_min.png');
+// Отправка запроса с путём к файлу для распознаванию, в ответ DTO
+$result = $ocrVisionYandexCloud->processDetection('/home/user/passport.jpg');
 
-print_r($arrayOfDto);
+print_r($result);
 ```
 
 Доступны следующие модели DTO в зависимости от переданной модели:
 - **Passport**
 - **DriverLicenseBack**
 - **DriverLicenseFront**
-
-### Доступные методы переопределения параметров объекта класса
-
-```injectablephp
-// Переопределение модели для распознавания
-$ocrVisionYandexCloud->setModel('driver-license-back');
-
-// Установить свой хост API распознавания документа
-$ocrVisionYandexCloud->setHost('https://new-host.com');
-
-// Установить свой метод API распознавания документа
-$ocrVisionYandexCloud->setMethod('PUT');
-
-// Установить свой хост API получения IAM токена
-$ocrVisionYandexCloud->setIAMHost('https://new-iam-host.com');
-
-// Установить свой метод API получения IAM токена
-$ocrVisionYandexCloud->setIAMMethod('GET');
-```
 
 
 Документация по использованию распознавания текста сервисом Vision: 
