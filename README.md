@@ -64,7 +64,7 @@ $ocrVisionYandexCloud = new ApiClient(
 // Отправка запроса с путём к файлу для распознаванию, в ответ DTO
 $result = $ocrVisionYandexCloud->processDetection('/home/user/passport.jpg');
 
-print_r($result);
+print_r($result->toArray());
 ```
 
 Доступны следующие модели DTO в зависимости от переданной модели:
