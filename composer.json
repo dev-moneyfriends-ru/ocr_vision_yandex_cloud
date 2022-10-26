@@ -2,6 +2,7 @@
   "name": "mf-team/ocr-vision-yandex-cloud",
   "description": "API for detect words in image by Vision Yandex Cloud",
   "type": "library",
+  "version": "dev-master",
   "keywords": [
     "vision",
     "api",
