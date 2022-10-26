@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace mfteam\ocrVisionYandexCloud\templates;
 
 class Passport extends AbstractTemplate

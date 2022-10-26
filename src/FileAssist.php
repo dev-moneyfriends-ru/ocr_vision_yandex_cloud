@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace  mfteam\ocrVisionYandexCloud;
 
 use mfteam\ocrVisionYandexCloud\exceptions\IAMFileException;
@@ -36,7 +38,7 @@ class FileAssist implements FileAssistInterface
 
             if ($IAMToken !== false) {
                 if (count($IAMToken) === 2 && (int) $IAMToken[0] < time()) {
-                    return new IAMTokenResponse($IAMToken[1], $IAMToken[0]);
+                    return new IAMTokenResponse($IAMToken[0], $IAMToken[1]);
                 }
             }
 

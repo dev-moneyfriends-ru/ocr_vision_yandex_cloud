@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace mfteam\ocrVisionYandexCloud\responses;
 
 class IAMTokenResponse
@@ -55,7 +57,7 @@ class IAMTokenResponse
      */
     public function setExpiredAt(string $expiredAt)
     {
-        $this->IAMToken = $expiredAt;
+        $this->expiredAt = $expiredAt;
     }
 
     /**

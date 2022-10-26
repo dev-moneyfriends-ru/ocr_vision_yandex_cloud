@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace  mfteam\ocrVisionYandexCloud;
 
 use GuzzleHttp\Client;
@@ -85,7 +87,7 @@ class VisionApiClient implements VisionApiClientInterface
                 throw new GetIAMTokenException('Wrong response while getting IAM Token.');
             }
 
-            return new IAMTokenResponse($contents['expiresAt'], $contents['iamToken']);
+            return new IAMTokenResponse($contents['iamToken'], $contents['expiresAt']);
         } catch (\Exception $e) {
             throw new GetIAMTokenException($e->getMessage());
         }
