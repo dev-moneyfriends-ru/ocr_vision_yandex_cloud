@@ -1,6 +1,6 @@
 {
-  "name": "mf-team/ocr_vision_yandex_cloud",
-  "description": "API для загрузки документов на обработку и получение результатов распознавания",
+  "name": "mf-team/ocr-vision-yandex-cloud",
+  "description": "API for detect words in image by Vision Yandex Cloud",
   "type": "library",
   "keywords": [
     "vision",
