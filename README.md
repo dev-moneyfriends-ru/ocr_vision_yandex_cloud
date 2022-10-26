@@ -22,13 +22,13 @@ OCR Vision Yandex Cloud предоставляет API для загрузки �
 Запустить
 
 ```
-composer require --prefer-dist mf-team/ocr_vision_yandex_cloud dev-master
+composer require --prefer-dist mf-team/ocr-vision-yandex-cloud dev-main
 ```
 
 или добавить
 
 ```
-"mf-team/ocr_vision_yandex_cloud": "dev-master"
+"mf-team/ocr-vision-yandex-cloud": "dev-main"
 ```
 
 в `composer.json`.
@@ -73,11 +73,22 @@ try {
 var_dump($arrayOfDto->toArray());
 ```
 
-Доступны следующие модели DTO в зависимости от переданной модели:
+Доступны следующие Шаблоны в зависимости от переданной модели:
 - **Passport**
 - **DriverLicenseBack**
 - **DriverLicenseFront**
 
+### Возможные исключения
+
+-------------
+```
+AccessDeniedException       Ошибка доступа по токену
+FillTemplateException       Ошибка заполнения шаблона данными
+GetIAMTokenException        Ошибка получения IAM токена
+GetTextDetectionException   Ошибка запроса на распознавание документа
+IAMFileException            Ошибка при обращении к файлу содержащему IAM откен
+ImageFileException          Ошибка работы с изображением
+```
 
 Документация по использованию распознавания текста сервисом Vision: 
 https://cloud.yandex.ru/docs/vision/operations/ocr/text-detection
