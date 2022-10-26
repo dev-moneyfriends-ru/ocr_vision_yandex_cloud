@@ -16,13 +16,12 @@ interface  FileAssistInterface
      *
      * @return mixed
      */
-    public function readAIMToken(): ?string;
+    public function readAIMToken(): ?IAMTokenResponse;
 
     /**
      * Запись полученного AIM токена
      *
      * @param IAMTokenResponse $AIMToken
-     * @return bool
      */
     public function writeAIMToken(IAMTokenResponse $AIMToken): void;
 

@@ -7,23 +7,26 @@ namespace mfteam\ocrVisionYandexCloud\templates;
  */
 class AbstractTemplate
 {
-    /**
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        $this->setItems($data);
-    }
+    protected $templateName;
+
+    public function __construct() {}
 
     /**
      * @param array $data
      *
      * @return void
      */
-    protected function setItems(array $data = []) {}
+    public function setItems(array $data = []) {}
+
+    public function getTemplateName(): string
+    {
+        return $this->templateName;
+    }
 
     /**
      * Список элементов в массив
+     *
+     * @return array
      */
-    public function toArray() {}
+    public function toArray(): array {}
 }

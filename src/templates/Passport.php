@@ -4,6 +4,8 @@ namespace mfteam\ocrVisionYandexCloud\templates;
 
 class Passport extends AbstractTemplate
 {
+    protected $templateName = 'passport';
+
     protected $name;
     protected $middle_name;
     protected $surname;
@@ -17,18 +19,18 @@ class Passport extends AbstractTemplate
     protected $expiration_date;
 
     /**
-     * @param array $data Результат распознавания паспорта
+     * @return string
      */
-    public function __construct(array $data = [])
+    public function getTemplateName(): string
     {
-        parent::__construct($data);
+        return parent::getTemplateName();
     }
 
     /**
      * @param array $data
      * @return void
      */
-    protected function setItems(array $data = [])
+    public function setItems(array $data = [])
     {
         foreach ($data as $item) {
             if (isset($item['name']) && isset($item['text'])) {

@@ -2,10 +2,12 @@
 
 namespace  mfteam\ocrVisionYandexCloud;
 
+use GuzzleHttp\Client;
 use mfteam\ocrVisionYandexCloud\exceptions\AccessDeniedException;
 use mfteam\ocrVisionYandexCloud\exceptions\GetIAMTokenException;
 use mfteam\ocrVisionYandexCloud\exceptions\GetTextDetectionException;
 use mfteam\ocrVisionYandexCloud\responses\IAMTokenResponse;
+use mfteam\ocrVisionYandexCloud\templates\AbstractTemplate;
 
 /**
  * Класс взаимодействия с API Yandex
@@ -22,6 +24,7 @@ class VisionApiClient implements VisionApiClientInterface
      * @var string
      */
     protected $IAMHost = 'https://iam.api.cloud.yandex.net/iam/v1/tokens';
+    protected $IAMMethod = 'POST';
 
     /**
      * @see https://cloud.yandex.ru/docs/resource-manager/operations/folder/get-id
@@ -44,29 +47,33 @@ class VisionApiClient implements VisionApiClientInterface
      */
     protected $IAMToken = null;
 
+    /**
+     * @var Client $guzzleClient
+     */
     protected $guzzleClient;
 
     /**
      * @param string $oAuthToken
      * @param string $folderId
+     * @param Client $guzzleClient
      */
     public function __construct(string $oAuthToken, string $folderId, $guzzleClient)
     {
-        $this->oAuthToken = $oAuthToken;
-        $this->folderId = $folderId;
+        $this->setOAuthToken($oAuthToken);
+        $this->setFolderId($folderId);
         $this->guzzleClient = $guzzleClient;
     }
 
     /**
      * @return IAMTokenResponse
-     * @throws GetIAMTokenException
+     * @throws GetIAMTokenException|\GuzzleHttp\Exception\GuzzleException
      */
     public function getFreshAIMToken(): IAMTokenResponse
     {
         // Получить свежий IAM токен
         try {
             $contents = $this->guzzleClient->request(
-                'POST',
+                $this->IAMMethod,
                 $this->IAMHost,
                 ['json' => ['yandexPassportOauthToken' => $this->oAuthToken]]
             )
@@ -89,6 +96,32 @@ class VisionApiClient implements VisionApiClientInterface
         $this->IAMToken = $IAMToken;
     }
 
+    public function setOAuthToken(string $oAuthToken)
+    {
+        $this->oAuthToken = $oAuthToken;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOAuthToken(): string
+    {
+        return $this->oAuthToken;
+    }
+
+    public function setFolderId(string $folderId)
+    {
+        $this->folderId = $folderId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFolderId(): string
+    {
+        return $this->folderId;
+    }
+
     /**
      * @param string $base64ConvertedImage
      * @param string $model
@@ -97,7 +130,7 @@ class VisionApiClient implements VisionApiClientInterface
      * @throws AccessDeniedException
      * @throws GetTextDetectionException
      */
-    public function getDetectedDocument(string $base64ConvertedImage, string $model, string $lang)
+    public function getDetectedDocument(string $base64ConvertedImage, AbstractTemplate $template, string $lang)
     {
         // Формирование запроса для распознавания документа
         $requestParams = [
@@ -111,7 +144,7 @@ class VisionApiClient implements VisionApiClientInterface
                             'language_codes' => [
                                 $lang
                             ],
-                            'model' => $model,
+                            'model' => $template->getTemplateName(),
                         ],
                     ],
                 ],

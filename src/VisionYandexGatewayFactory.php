@@ -2,7 +2,8 @@
 
 namespace  mfteam\ocrVisionYandexCloud;
 
-use mfteam\ocrVisionYandexCloud\exceptions\ModelEnumException;
+use mfteam\ocrVisionYandexCloud\exceptions\IAMFileException;
+use mfteam\ocrVisionYandexCloud\templates\AbstractTemplate;
 
 /**
  * Фабрика Api клиента
@@ -15,25 +16,23 @@ class VisionYandexGatewayFactory
     /**
      * @param string $oAuthToken
      * @param string $folderId
-     * @param string $model
-     * @param $guzzleClient
-     * @param string|null $AIMFile
-     * @param string|null $lang
+     * @param GuzzleHttp\Client $guzzleClient
+     * @param AbstractTemplate $template
+     * @param string|null $IAMFile
      * @return VisionYandexGateway
-     * @throws ModelEnumException
+     * @throws IAMFileException
      */
     public static function instanceClient(
         string $oAuthToken,
         string $folderId,
-        string $model,
         $guzzleClient,
-        string $AIMFile = null,
-        string $lang = null
+        AbstractTemplate $template,
+        string $IAMFile = null
     ): VisionYandexGateway
     {
         $clientApi = new VisionApiClient($oAuthToken, $folderId, $guzzleClient);
-        $fileAssist = new FileAssist($AIMFile);
+        $fileAssist = new FileAssist($IAMFile);
 
-        return new VisionYandexGateway($clientApi, $fileAssist, $model, $lang);
+        return new VisionYandexGateway($clientApi, $fileAssist, $template);
     }
 }

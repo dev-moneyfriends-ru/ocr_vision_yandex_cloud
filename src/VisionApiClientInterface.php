@@ -3,6 +3,7 @@
 namespace  mfteam\ocrVisionYandexCloud;
 
 use mfteam\ocrVisionYandexCloud\responses\IAMTokenResponse;
+use mfteam\ocrVisionYandexCloud\templates\AbstractTemplate;
 
 /**
  * Базовый интерфейс пакета распознавания Vision Yandex Cloud
@@ -13,5 +14,5 @@ interface  VisionApiClientInterface
 
     function setAIMToken(string $IAMToken);
 
-    public function getDetectedDocument(string $base64ConvertedImage, string $model, string $lang);
+    public function getDetectedDocument(string $base64ConvertedImage, AbstractTemplate $template, string $lang);
 }

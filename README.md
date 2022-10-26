@@ -41,10 +41,9 @@ composer require --prefer-dist mf-team/ocr_vision_yandex_cloud dev-master
 $ocrVisionYandexCloud = VisionYandexGatewayFactory::instanceClient(
         '', // oAuth токен
         '', // folderId
-        'passport', // Название модели
+        new Passport(), // Шаблон обрабатываемого документа
         new Client(), // GuzzleHTTP клиент
         '/home/user/IAMToken.txt', // Путь к файлу для распознавания
-        'ru' // Язык документа, по умолчанию 'ru'
     );
 ```
 
@@ -54,17 +53,24 @@ $ocrVisionYandexCloud = VisionYandexGatewayFactory::instanceClient(
 
 ```injectablephp
 // Формирование ключей и инициализация объекта
-$ocrVisionYandexCloud = new ApiClient(
-        '', // oAuth токен
-        '', // folderId
-        'passport', // Название модели
-        new Client(), // GuzzleHTTP клиент
-    );
+use GuzzleHttp\Client;
+use mfteam\ocrVisionYandexCloud\templates\Passport;
+use mfteam\ocrVisionYandexCloud\VisionYandexGatewayFactory;
 
-// Отправка запроса с путём к файлу для распознаванию, в ответ DTO
-$result = $ocrVisionYandexCloud->processDetection('/home/user/passport.jpg');
+$api = VisionYandexGatewayFactory::instanceClient(
+    '',
+    '',
+    new Client(),
+    new Passport()
+);
 
-print_r($result->toArray());
+try {
+    $arrayOfDto = $api->processDetection('/tmp/1234.jpg');
+} catch (ocrVisionYandexCloud\exceptions\FillTemplateException $e) {
+    echo 'Распознать документ не удалось' . PHP_EOL;
+}
+
+var_dump($arrayOfDto->toArray());
 ```
 
 Доступны следующие модели DTO в зависимости от переданной модели:

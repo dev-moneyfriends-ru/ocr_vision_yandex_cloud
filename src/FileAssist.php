@@ -23,16 +23,24 @@ class FileAssist implements FileAssistInterface
     }
 
     /**
-     * @return string|null
+     * @return IAMTokenResponse|null
      * @throws IAMFileException
      */
-    public function readAIMToken(): ?string
+    public function readAIMToken(): ?IAMTokenResponse
     {
         try {
             if (!file_exists($this->IAMFileName)) {
                 throw new IAMFileException('IAM token file does not exists');
             }
-            return file_get_contents($this->IAMFileName);
+            $IAMToken = explode(PHP_EOL, file_get_contents($this->IAMFileName));
+
+            if ($IAMToken !== false) {
+                if (count($IAMToken) === 2 && (int) $IAMToken[0] < time()) {
+                    return new IAMTokenResponse($IAMToken[1], $IAMToken[0]);
+                }
+            }
+
+            return null;
         } catch (\Exception $e) {
             throw new IAMFileException($e->getMessage());
         }

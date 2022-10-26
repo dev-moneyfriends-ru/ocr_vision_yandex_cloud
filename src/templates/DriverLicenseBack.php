@@ -4,6 +4,8 @@ namespace mfteam\ocrVisionYandexCloud\templates;
 
 class DriverLicenseBack extends AbstractTemplate
 {
+    protected $templateName = 'driver-license-back';
+
     protected $experience_from;
     protected $number;
     protected $issue_date;
@@ -11,18 +13,18 @@ class DriverLicenseBack extends AbstractTemplate
     protected $prev_number;
 
     /**
-     * @param array $data Результат распознавания обратной стороны водительских прав
+     * @return string
      */
-    public function __construct(array $data = [])
+    public function getTemplateName(): string
     {
-        parent::__construct($data);
+        return parent::getTemplateName();
     }
 
     /**
      * @param array $data
      * @return void
      */
-    protected function setItems(array $data = [])
+    public function setItems(array $data = [])
     {
         foreach ($data as $item) {
             if (isset($item['name']) && isset($item['text'])) {

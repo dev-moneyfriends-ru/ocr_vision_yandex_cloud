@@ -2,10 +2,8 @@
 
 namespace  mfteam\ocrVisionYandexCloud;
 
-use mfteam\ocrVisionYandexCloud\exceptions\GetIAMTokenException;
-use mfteam\ocrVisionYandexCloud\exceptions\ModelEnumException;
-use mfteam\ocrVisionYandexCloud\helpers\FileHelper;
-use mfteam\ocrVisionYandexCloud\templates\TemplateFactory;
+use mfteam\ocrVisionYandexCloud\exceptions\FillTemplateException;
+use mfteam\ocrVisionYandexCloud\templates\AbstractTemplate;
 
 /**
  * Шлюз взаимодействия с API распознавания текстов Yandex Vision Cloud
@@ -25,55 +23,40 @@ class VisionYandexGateway
     /**
      * Клиент работы с файлами
      *
-     * @var VisionApiClientInterface
+     * @var FileAssistInterface
      */
     protected $fileAssist;
 
-    /**
-     * Тип распознаваемого документа, допустимые значения:
+    /** Шаблон распознаваемого документа, имеющиеся типы:
      *  - passport
      *  - driver-license-front
      *  - driver-license-back
      *
-     * @var string $model;
+     * @var AbstractTemplate $template
      */
-    protected $model = null;
+    protected $template;
 
     /**
      * Язык распознавания. По умолчанию: "ru"
      *
      * @var string $lang
      */
-    protected $lang;
-
+    protected $lang = self::DEFAULT_LANG;
     protected const DEFAULT_LANG = 'ru';
-
-    public const MODEL_PASSPORT = 'passport';
-    public const MODEL_DRIVER_LICENSE_FRONT = 'driver-license-front';
-    public const MODEL_DRIVER_LICENSE_BACK = 'driver-license-back';
-    public const ALLOWED_MODELS_LIST = [
-        self::MODEL_PASSPORT,
-        self::MODEL_DRIVER_LICENSE_FRONT,
-        self::MODEL_DRIVER_LICENSE_BACK,
-    ];
 
     /**
      * @param VisionApiClientInterface $apiClient
      * @param FileAssistInterface $fileAssist
-     * @param string $model
-     * @param ?string $lang
-     * @throws ModelEnumException
+     * @param AbstractTemplate $template
      */
     public function __construct(
         VisionApiClientInterface $apiClient,
         FileAssistInterface $fileAssist,
-        string $model,
-        ?string $lang
+        AbstractTemplate $template
     ) {
         $this->apiClient = $apiClient;
         $this->fileAssist = $fileAssist;
-        $this->setModel($model);
-        $this->setLang($lang);
+        $this->template = $template;
 
         $this->prepareIAMToken();
     }
@@ -85,35 +68,14 @@ class VisionYandexGateway
     {
         // Прочитать токен из файла
         $IAMToken = $this->fileAssist->readAIMToken();
-
         if ($IAMToken !== null) {
-            $IAMToken = explode(PHP_EOL, $IAMToken);
-
-            if (count($IAMToken) === 2 && (int) $IAMToken[0] < time()) {
-                $this->apiClient->setAIMToken($IAMToken[1]);
-
-                return;
-            }
+            $this->apiClient->setAIMToken($IAMToken);
+        } else {
+            // Если не удалось, получить новый токен. Записать новый IAM токен в файл
+            $IAMToken = $this->apiClient->getFreshAIMToken();
+            $this->apiClient->setAIMToken($IAMToken->getIAMToken());
+            $this->fileAssist->writeAIMToken($IAMToken);
         }
-
-        // Если не удалось, получить новый токен. Записать новый IAM токен в файл
-        $IAMToken = $this->apiClient->getFreshAIMToken();
-        $this->apiClient->setAIMToken($IAMToken->getIAMToken());
-        $this->fileAssist->writeAIMToken($IAMToken);
-    }
-
-    /**
-     * @param string $model
-     * @return void
-     * @throws ModelEnumException
-     */
-    public function setModel(string $model)
-    {
-        if (!in_array($model, self::ALLOWED_MODELS_LIST)) {
-            throw new ModelEnumException('Given model is not in list of allowed models');
-        }
-
-        $this->model = $model;
     }
 
     public function setLang(?string $lang)
@@ -123,20 +85,22 @@ class VisionYandexGateway
 
     /**
      * @param string $processedFilename
-     * @return templates\DriverLicenseBack|templates\DriverLicenseFront|templates\Passport|null
+     * @return AbstractTemplate
+     * @throws FillTemplateException
      */
-    public function processDetection(string $processedFilename)
+    public function processDetection(string $processedFilename): AbstractTemplate
     {
         $result = $this->apiClient->getDetectedDocument(
             $this->fileAssist->convertDetectedDocument($processedFilename),
-            $this->model,
+            $this->template,
             $this->lang
         );
 
         if ($result === null) {
-            return null;
+            throw new FillTemplateException('Empty value in template');
         }
 
-        return TemplateFactory::templateInstance($result, $this->model);
+        $this->template->setItems($result);
+        return $this->template;
     }
 }
