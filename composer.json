@@ -16,6 +16,11 @@
       "mfteam\\ocrVisionYandexCloud\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "mfteam\\ocrVisionYandexCloud\\Test\\": "Test/"
+    }
+  },
   "authors": [
     {
       "name": "Dmitry Kinev",

@@ -90,5 +90,23 @@ IAMFileException            Ошибка при обращении к файлу
 ImageFileException          Ошибка работы с изображением
 ```
 
+### Psalm тестирование
+
+-------------
+
+Покрытие кода тестированием Psalm
+
+Установка dev:
+```
+composer require --dev vimeo/psalm
+```
+
+Запуск проверки:
+```
+./vendor/bin/psalm .
+```
+
+-------------
+
 Документация по использованию распознавания текста сервисом Vision: 
 https://cloud.yandex.ru/docs/vision/operations/ocr/text-detection
