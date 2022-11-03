@@ -16,5 +16,5 @@ interface  VisionApiClientInterface
 
     function setAIMToken(string $IAMToken);
 
-    public function getDetectedDocument(string $base64ConvertedImage, AbstractTemplate $template, string $lang);
+    public function getDetectedDocument(string $pathToFile, string $base64ConvertedImage, AbstractTemplate $template, string $lang);
 }

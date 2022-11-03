@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace  mfteam\ocrVisionYandexCloud;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use mfteam\ocrVisionYandexCloud\exceptions\AccessDeniedException;
 use mfteam\ocrVisionYandexCloud\exceptions\GetIAMTokenException;
 use mfteam\ocrVisionYandexCloud\exceptions\GetTextDetectionException;
@@ -125,14 +126,16 @@ class VisionApiClient implements VisionApiClientInterface
     }
 
     /**
+     * @param string $pathToFile
      * @param string $base64ConvertedImage
-     * @param string $model
+     * @param AbstractTemplate $template
      * @param string $lang
      * @return void
      * @throws AccessDeniedException
      * @throws GetTextDetectionException
+     * @throws GuzzleException
      */
-    public function getDetectedDocument(string $base64ConvertedImage, AbstractTemplate $template, string $lang)
+    public function getDetectedDocument(string $pathToFile, string $base64ConvertedImage, AbstractTemplate $template, string $lang)
     {
         // Формирование запроса для распознавания документа
         $requestParams = [
@@ -149,6 +152,7 @@ class VisionApiClient implements VisionApiClientInterface
                             'model' => $template->getTemplateName(),
                         ],
                     ],
+                    "mime_type" => get_file_mime_type($pathToFile),
                 ],
             ],
             'headers' => [

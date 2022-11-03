@@ -93,6 +93,7 @@ class VisionYandexGateway
     public function processDetection(string $processedFilename): AbstractTemplate
     {
         $result = $this->apiClient->getDetectedDocument(
+            $processedFilename,
             $this->fileAssist->convertDetectedDocument($processedFilename),
             $this->template,
             $this->lang
