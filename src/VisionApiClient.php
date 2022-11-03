@@ -152,7 +152,7 @@ class VisionApiClient implements VisionApiClientInterface
                             'model' => $template->getTemplateName(),
                         ],
                     ],
-                    "mime_type" => get_file_mime_type($pathToFile),
+                    "mime_type" => mime_content_type($pathToFile),
                 ],
             ],
             'headers' => [
